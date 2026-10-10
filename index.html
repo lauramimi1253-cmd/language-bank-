@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Preparation – Digital Habits & Screen Time</title>
+<style>
+  /* ---------- RESET & BASE ---------- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink:    #FFE1EC;
+    --pink-d:  #E39BB7;
+    --blue:    #DDE9FF;
+    --blue-d:  #8FAEE8;
+    --mint:    #DFF5E9;
+    --mint-d:  #86C7A6;
+    --yellow:  #FFF3D6;
+    --yellow-d:#E0BB6E;
+    --lav:     #EDE4FF;
+    --lav-d:   #A98FD6;
+    --cream:   #FDF8F3;
+    --ink:     #4A4458;
+    --ink-soft:#7A7286;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', 'Nunito', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* ---------- DECK ---------- */
+  .deck {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4vh 5vw;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.97) translateY(20px);
+    transition: opacity .55s ease, transform .55s ease, visibility .55s;
+    text-align: center;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+  }
+
+  /* ---------- ANIMACIONES DE ENTRADA ---------- */
+  .slide.active .anim {
+    animation: fadeUp .7s ease both;
+  }
+  .slide.active .anim:nth-child(1) { animation-delay: .10s; }
+  .slide.active .anim:nth-child(2) { animation-delay: .22s; }
+  .slide.active .anim:nth-child(3) { animation-delay: .34s; }
+  .slide.active .anim:nth-child(4) { animation-delay: .46s; }
+  .slide.active .anim:nth-child(5) { animation-delay: .58s; }
+  .slide.active .anim:nth-child(6) { animation-delay: .70s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- TIPOGRAFÍA ---------- */
+  .badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 2px dashed var(--lav-d);
+    padding: 8px 18px;
+    border-radius: 30px;
+    margin-bottom: 22px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 4.6vw, 54px);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  h2 {
+    font-size: clamp(20px, 2.6vw, 30px);
+    font-weight: 700;
+    margin-bottom: 26px;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-size: clamp(15px, 1.6vw, 19px);
+    color: var(--ink-soft);
+    margin-top: 14px;
+    font-weight: 500;
+  }
+
+  /* ---------- DIAPOSITIVA 1: PORTADA ---------- */
+  .cover-emoji {
+    font-size: clamp(64px, 10vw, 110px);
+    margin-bottom: 16px;
+    animation: float 3.5s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-14px); }
+  }
+
+  /* ---------- DIAPOSITIVA 2: ESCENARIO ---------- */
+  .scenario-row {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 44px;
+    align-items: center;
+    width: 100%;
+    max-width: 1080px;
+    text-align: left;
+  }
+
+  .scenario-text {
+    background: #fff;
+    border-radius: 22px;
+    padding: 32px 34px;
+    box-shadow: 0 14px 40px rgba(168,143,214,0.16);
+    border-left: 8px solid var(--lav-d);
+    position: relative;
+  }
+
+  .scenario-text .label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--lav-d);
+    margin-bottom: 12px;
+  }
+
+  .scenario-text p {
+    font-size: clamp(17px, 1.9vw, 22px);
+    line-height: 1.5;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .questions {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .questions span {
+    background: var(--lav);
+    color: #6B5B95;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: clamp(14px, 1.5vw, 17px);
+    font-weight: 700;
+    font-style: italic;
+    animation: pulseSoft 2.6s ease-in-out infinite;
+  }
+  .questions span:nth-child(2) { animation-delay: .6s; }
+
+  @keyframes pulseSoft {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.04); }
+  }
+
+  /* Teléfono con CSS */
+  .phone-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone {
+    width: clamp(180px, 20vw, 230px);
+    aspect-ratio: 9 / 16;
+    background: #4A4458;
+    border-radius: 34px;
+    padding: 12px 10px;
+    box-shadow: 0 22px 50px rgba(74,68,88,0.32);
+    position: relative;
+    animation: floatPhone 4s ease-in-out infinite;
+  }
+  @keyframes floatPhone {
+    0%,100% { transform: translateY(0) rotate(-1deg); }
+    50%     { transform: translateY(-10px) rotate(1deg); }
+  }
+
+  .phone .notch {
+    width: 72px; height: 8px;
+    background: #322D3D;
+    border-radius: 12px;
+    margin: 0 auto 8px;
+  }
+
+  .phone .screen {
+    background: linear-gradient(180deg, var(--blue) 0%, #F4F8FF 100%);
+    height: calc(100% - 22px);
+    border-radius: 24px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    overflow: hidden;
+  }
+
+  .notif {
+    background: #fff;
+    border-radius: 12px;
+    padding: 9px 11px;
+    box-shadow: 0 3px 10px rgba(74,68,88,0.10);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: clamp(10px, 1vw, 12px);
+    color: var(--ink);
+    font-weight: 600;
+    animation: notifPop 2.4s ease-in-out infinite;
+  }
+
+  .notif .dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  .notif:nth-child(1) .dot { background: #F7B5C9; }
+  .notif:nth-child(2) .dot { background: #A9C4F0; }
+  .notif:nth-child(3) .dot { background: #A8DFC2; }
+  .notif:nth-child(4) .dot { background: #F3D69B; }
+  .notif:nth-child(5) .dot { background: #C5B3E8; }
+
+  .notif:nth-child(1) { animation-delay: 0s; }
+  .notif:nth-child(2) { animation-delay: .3s; }
+  .notif:nth-child(3) { animation-delay: .6s; }
+  .notif:nth-child(4) { animation-delay: .9s; }
+  .notif:nth-child(5) { animation-delay: 1.2s; }
+
+  @keyframes notifPop {
+    0%,100% { transform: translateY(0); opacity: 1; }
+    50%     { transform: translateY(-4px); opacity: .92; }
+  }
+
+  /* ---------- DIAPOSITIVA 3: LANGUAGE BANK ---------- */
+  .bank-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    width: 100%;
+    max-width: 1180px;
+    margin-top: 6px;
+  }
+
+  .bank-col {
+    border-radius: 20px;
+    padding: 20px 18px;
+    text-align: left;
+    border-top: 6px solid;
+    box-shadow: 0 12px 32px rgba(74,68,88,0.08);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+
+  .bank-col:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(74,68,88,0.16);
+  }
+
+  .bank-col h3 {
+    font-size: clamp(13px, 1.4vw, 16px);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .bank-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .bank-col li {
+    font-size: clamp(12px, 1.25vw, 15px);
+    color: var(--ink);
+    background: rgba(255,255,255,0.75);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-style: italic;
+    line-height: 1.35;
+    transition: background .25s;
+  }
+  .bank-col li:hover { background: #fff; }
+
+  .bank-col li::before {
+    content: "›";
+    font-style: normal;
+    font-weight: 800;
+    margin-right: 7px;
+    opacity: .75;
+  }
+
+  .bank-col.ask     { background: var(--pink);   border-color: var(--pink-d); }
+  .bank-col.give    { background: var(--blue);   border-color: var(--blue-d); }
+  .bank-col.suggest { background: var(--mint);   border-color: var(--mint-d); }
+  .bank-col.agree   { background: var(--yellow); border-color: var(--yellow-d); }
+
+  /* ---------- DIAPOSITIVA 4: PAIR WORK ---------- */
+  .prompt-card {
+    background: #fff;
+    border-radius: 26px;
+    padding: 42px 46px;
+    max-width: 780px;
+    box-shadow: 0 18px 50px rgba(168,143,214,0.18);
+    border: 2px dashed var(--lav-d);
+  }
+
+  .prompt-card .tag {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--lav-d);
+    margin-bottom: 16px;
+  }
+
+  .prompt-card p {
+    font-size: clamp(20px, 2.6vw, 30px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .prompt-card .hint {
+    margin-top: 22px;
+    font-size: clamp(14px, 1.6vw, 17px);
+    color: var(--ink-soft);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* ---------- DIAPOSITIVA 5: STEPS ---------- */
+  .steps-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1100px;
+  }
+
+  .step {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px 22px;
+    width: clamp(180px, 20vw, 230px);
+    text-align: left;
+    box-shadow: 0 12px 32px rgba(74,68,88,0.08);
+    border-bottom: 6px solid;
+    transition: transform .3s ease;
+  }
+  .step:hover { transform: translateY(-6px); }
+
+  .step:nth-child(1) { border-color: var(--pink-d); }
+  .step:nth-child(2) { border-color: var(--blue-d); }
+  .step:nth-child(3) { border-color: var(--mint-d); }
+  .step:nth-child(4) { border-color: var(--yellow-d); }
+
+  .step .num {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .step:nth-child(1) .num { background: var(--pink-d); }
+  .step:nth-child(2) .num { background: var(--blue-d); }
+  .step:nth-child(3) .num { background: var(--mint-d); }
+  .step:nth-child(4) .num { background: var(--yellow-d); }
+
+  .step h4 {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .step p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  /* ---------- CONTROLES ---------- */
+  .dots {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #E0DBEC;
+    border: none;
+    cursor: pointer;
+    transition: all .3s ease;
+  }
+  .dot.active {
+    background: var(--lav-d);
+    width: 34px;
+    border-radius: 8px;
+  }
+
+  .nav-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--lav);
+    color: var(--ink);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(74,68,88,0.12);
+    transition: all .25s;
+    z-index: 20;
+    user-select: none;
+  }
+  .nav-btn:hover { background: var(--lav); transform: translateY(-50%) scale(1.08); }
+  .nav-btn.prev { left: 18px; }
+  .nav-btn.next { right: 18px; }
+
+  .hint-keys {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: #fff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(74,68,88,0.08);
+    z-index: 20;
+    font-weight: 600;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 900px) {
+    .scenario-row { grid-template-columns: 1fr; gap: 26px; }
+    .bank-grid { grid-template-columns: repeat(2, 1fr); }
+    .phone { width: 170px; }
+  }
+  @media (max-width: 560px) {
+    .bank-grid { grid-template-columns: 1fr; }
+    .nav-btn { width: 40px; height: 40px; font-size: 16px; }
+    .hint-keys { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ============ SLIDE 1: PORTADA ============ -->
+  <section class="slide active">
+    <div class="cover-emoji anim">📱</div>
+    <span class="badge anim">Language Preparation · Pre-Task</span>
+    <h1 class="anim">Digital Habits &amp; Screen Time</h1>
+    <p class="subtitle anim">Useful language for asking, giving opinions, and making suggestions</p>
+    <p class="subtitle anim" style="margin-top:32px; font-size:14px;">Press ➜ ➜ to begin</p>
+  </section>
+
+  <!-- ============ SLIDE 2: ESCENARIO ============ -->
+  <section class="slide">
+    <h2 class="anim">💬 Read the scenario</h2>
+
+    <div class="scenario-row">
+      <div class="scenario-text anim">
+        <div class="label">Scenario</div>
+        <p>Alex checks his notifications every 5 minutes while he studies. He can't focus.</p>
+        <div class="questions">
+          <span>💬 What do you think?</span>
+          <span>💡 What should he do?</span>
+        </div>
+      </div>
+
+      <div class="phone-wrap anim">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="notif"><span class="dot">💬</span> New message from Sara</div>
+            <div class="notif"><span class="dot">❤️</span> 12 likes on your post</div>
+            <div class="notif"><span class="dot">📸</span> Instagram: new story</div>
+            <div class="notif"><span class="dot">🔔</span> TikTok: 5 new videos</div>
+            <div class="notif"><span class="dot">✉️</span> 3 unread emails</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3: LANGUAGE BANK ============ -->
+  <section class="slide">
+    <h2 class="anim">💬 Language Bank — Use these expressions</h2>
+
+    <div class="bank-grid">
+      <div class="bank-col ask anim">
+        <h3>❓ Asking for opinions</h3>
+        <ul>
+          <li>What do you think?</li>
+          <li>How about you?</li>
+          <li>What's your opinion?</li>
+        </ul>
+      </div>
+
+      <div class="bank-col give anim">
+        <h3>🧠 Giving opinions</h3>
+        <ul>
+          <li>I think…</li>
+          <li>In my opinion…</li>
+          <li>For me…</li>
+        </ul>
+      </div>
+
+      <div class="bank-col suggest anim">
+        <h3>💡 Making suggestions</h3>
+        <ul>
+          <li>You should…</li>
+          <li>Why don't you…?</li>
+          <li>How about…?</li>
+        </ul>
+      </div>
+
+      <div class="bank-col agree anim">
+        <h3>👍 Agreeing / Disagreeing</h3>
+        <ul>
+          <li>I agree. / That's a good idea.</li>
+          <li>I don't agree.</li>
+          <li>I see your point, but…</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4: PAIR WORK ============ -->
+  <section class="slide">
+    <span class="badge anim">👥 Pair Work — Your Turn</span>
+
+    <div class="prompt-card anim">
+      <div class="tag">In breakout rooms</div>
+      <p>"What do you think about using social media before bed? Make a suggestion."</p>
+      <p class="hint">Use the expressions from the Language Bank. Remember to listen to your partner and respond.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5: STEPS ============ -->
+  <section class="slide">
+    <h2 class="anim">🎯 Our Language Preparation in 4 Steps</h2>
+
+    <div class="steps-row">
+      <div class="step anim">
+        <div class="num">1</div>
+        <h4>Scenario</h4>
+        <p>The teacher presents Alex's situation and asks the guiding questions.</p>
+      </div>
+
+      <div class="step anim">
+        <div class="num">2</div>
+        <h4>Model</h4>
+        <p>The teacher shows the Language Bank and models one example with a student.</p>
+      </div>
+
+      <div class="step anim">
+        <div class="num">3</div>
+        <h4>Pair Work</h4>
+        <p>Students practice in breakout rooms. The teacher monitors without interrupting.</p>
+      </div>
+
+      <div class="step anim">
+        <div class="num">4</div>
+        <h4>Share</h4>
+        <p>One pair shares their exchange. The teacher gives feedback and recasts.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ CONTROLES ============ -->
+<div class="hint-keys">◀ ▶ to navigate</div>
+
+<button class="nav-btn prev" onclick="prevSlide()">‹</button>
+<button class="nav-btn next" onclick="nextSlide()">›</button>
+
+<div class="dots" id="dots"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  let current = 0;
+
+  /* Crear puntos de navegación */
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(d);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  function goTo(index) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  /* Navegación con teclado */
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) {
+      e.preventDefault(); nextSlide();
+    }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+      e.preventDefault(); prevSlide();
+    }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  /* Swipe táctil */
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+  document.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(diff) > 60) {
+      diff < 0 ? nextSlide() : prevSlide();
+    }
+  });
+
+  /* Clic en la mitad derecha / izquierda (opcional) */
+  document.querySelector('.deck').addEventListener('click', (e) => {
+    if (e.target.closest('.nav-btn') || e.target.closest('.dot')) return;
+    if (e.clientX > window.innerWidth * 0.65) nextSlide();
+    else if (e.clientX < window.innerWidth * 0.35) prevSlide();
+  });
+</script>
+
+</body>
+</html>
